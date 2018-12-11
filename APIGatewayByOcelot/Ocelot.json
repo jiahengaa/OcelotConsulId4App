@@ -1,0 +1,139 @@
+﻿{
+  "ReRoutes": [
+    // --> ApiOne Service Part
+    {
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts":[
+        {
+          "Host":"localhost",
+          "Port":8000
+        },
+        {
+          "Host":"localhost",
+          "Port":8001
+        },
+        {
+          "Host":"localhost",
+          "Port":8002
+        }
+      ],
+      "UpstreamPathTemplate": "/one/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post"
+      ],
+      "AuthenticationOptions": { //需要验证身份的设置项，如果不配置AuthenticationOptions，代表无需身份验证，直接路由到服务
+        "AuthenticationProviderKey": "ApiOneServerKey", //需要验证的服务标志
+        "AllowedScopes": []
+      },
+      "ServiceName": "ApiOne",
+
+      "LoadBalancer": "RoundRobin",
+
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "Limit": 3,
+        "PeriodTimespan": 5
+      },
+
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 5,
+        "TimeoutValue": 5000
+      },
+      "UseServiceDiscovery": true
+    },
+    // --> ApiTwo Service Part
+    {
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts":[
+        {
+          "Host":"localhost",
+          "Port":8003
+        },
+        {
+          "Host":"localhost",
+          "Port":8004
+        },
+        {
+          "Host":"localhost",
+          "Port":8005
+        }
+      ],
+      "UpstreamPathTemplate": "/two/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post"
+      ],
+      "AuthenticationOptions": { //需要验证身份的设置项，如果不配置AuthenticationOptions，代表无需身份验证，直接路由到服务
+        "AuthenticationProviderKey": "ApiTwoServerKey", //需要验证的服务标志
+        "AllowedScopes": []
+      },
+      "ServiceName": "ApiTwo",
+      "LoadBalancer": "RoundRobin ",
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "Limit": 30,
+        "PeriodTimespan": 5
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 5,
+        "TimeoutValue": 5000
+      },
+      "UseServiceDiscovery": true // use Consul service discovery
+    },
+    // --> Identity Service Part
+    {
+      "UseServiceDiscovery": false, // do not use Consul service discovery
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "12345"
+        }
+      ],
+      "ServiceName": "IdentityServiceCenter",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      "UpstreamPathTemplate": "/api/identityservice/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [ "admin" ], // 白名单
+        "EnableRateLimiting": true, // 是否启用限流
+        "Period": "1m", // 统计时间段：1s, 5m, 1h, 1d
+        "PeriodTimespan": 15, // 多少秒之后客户端可以重试
+        "Limit": 10 // 在统计时间段内允许的最大请求数量
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // 允许多少个异常请求
+        "DurationOfBreak": 5000, // 熔断的时间，单位为秒
+        "TimeoutValue": 3000 // 如果下游请求的处理时间超过多少则视如该请求超时
+      },
+      "HttpHandlerOptions": {
+        "UseTracing": false // use butterfly to tracing request chain
+      },
+      "ReRoutesCaseSensitive": false // non case sensitive
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "127.0.0.1",
+      "Port": 8500
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用
+      "QuataExceededMessage": "太多次请求，请停一会", //// 当请求过载被截断时返回的消息
+      "HttpStatusCode": 999, //当请求过载被截断时返回的http status
+      "ClientIdHeader": "client_id" //用来识别客户端的请求头，默认是 ClientId
+    }
+  }
+}

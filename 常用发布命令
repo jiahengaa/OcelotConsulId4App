@@ -1,0 +1,50 @@
+发布服务常用命令
+
+ 
+ 
+sudo docker rm -f apione001
+sudo docker rmi -f apionepipi
+
+dotnet publish
+
+sudo docker build -t apionepipi .
+sudo docker build -t apitwopipi .
+sudo docker build -t ocelotgatewaypipi .
+sudo docker build -t ids4centerpipi .
+
+sudo docker run -d --net staticnet --ip 172.18.0.30 --restart=always --name="apione001" -p 5000:5000 -p 8000:8000 -p 8500:8500 -p 8600:8600 apionepipi
+
+sudo docker ps -a
+
+sudo docker logs -f apione001
+
+
+
+sudo docker run -d --net staticnet --ip 172.18.0.30 --restart=always --name="apione001" -p 5000:5000 -p 8000:8000 -p 8500:8500 -p 8600:8600 apionepipi --apioneip 172.18.0.30 --apioneport 5000
+
+
+sudo docker run -d --net staticnet --ip 172.18.0.30 --restart=always --name="apione001" -p 5000:5000 -p 8000:8000 -p 8500:8500 -p 8600:8600 apionepipi --apioneip 172.18.0.30 --apioneport 5000 --consulip 172.18.0.11 --consulport 8500
+
+
+sudo docker run -d --net staticnet --ip 172.18.0.30 --restart=always --name="apione001" -p 5000:5000 -p 8000:8000 -p 8500:8500 -p 8600:8600 apionepipi --apioneip 172.18.0.30 --apioneport 5000 --consulip 172.18.0.11 --consulport 8500 --servername ApiOne
+sudo docker run -d --net staticnet --ip 172.18.0.31 --restart=always --name="apione002" -p 5001:5000 -p 8001:8000 -p 8501:8500 -p 8601:8600 apionepipi --apioneip 172.18.0.31 --apioneport 5000 --consulip 172.18.0.10 --consulport 8500 --servername ApiOne
+sudo docker run -d --net staticnet --ip 172.18.0.32 --restart=always --name="apione003" -p 5002:5000 -p 8002:8000 -p 8502:8500 -p 8602:8600 apionepipi --apioneip 172.18.0.32 --apioneport 5000 --consulip 172.18.0.12 --consulport 8500 --servername ApiOne
+sudo docker run -d --net staticnet --ip 172.18.0.33 --restart=always --name="apitwo001" -p 5003:5000 -p 8003:8000 -p 8503:8500 -p 8603:8600 apitwopipi --apitwoip 172.18.0.33 --apitwoport 5000 --consulip 172.18.0.13 --consulport 8500 --servername ApiTwo
+sudo docker run -d --net staticnet --ip 172.18.0.34 --restart=always --name="apitwo002" -p 5004:5000 -p 8004:8000 -p 8504:8500 -p 8604:8600 apitwopipi --apitwoip 172.18.0.34 --apitwoport 5000 --consulip 172.18.0.14 --consulport 8500 --servername ApiTwo
+sudo docker run -d --net staticnet --ip 172.18.0.35 --restart=always --name="apitwo003" -p 5005:5000 -p 8005:8000 -p 8505:8500 -p 8605:8600 apitwopipi --apitwoip 172.18.0.35 --apitwoport 5000 --consulip 172.18.0.15 --consulport 8500 --servername ApiTwo
+
+
+sudo docker run -d --net staticnet --ip 172.18.0.70 --restart=always --name="ocelotgateway" -p 4000:5000 ocelotgatewaypipi
+sudo docker run -d --net staticnet --ip 172.18.0.60 --restart=always --name="Ids4Center" -p 12345:12345 ids4centerpipi --ids4ip 172.18.0.60 --ids4port 12345 --consulip 172.18.0.16 --consulport 8500 --servername IdentityServiceCenter 
+
+
+
+sudo docker rm -f apione001
+sudo docker rm -f apione002
+sudo docker rm -f apione003
+sudo docker rm -f apitwo001
+sudo docker rm -f apitwo003
+sudo docker rm -f apitwo002
+sudo docker rm -f ocelotgateway
+sudo docker rm -f Ids4Center
+

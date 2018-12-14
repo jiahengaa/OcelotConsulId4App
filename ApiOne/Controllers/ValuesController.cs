@@ -13,7 +13,7 @@ namespace ApiOne.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "apione", "value1", "value2" };
+            return new string[] { "apione", "value1", "value2", Environment.CommandLine, Environment.CurrentManagedThreadId.ToString(), Environment.MachineName, Environment.OSVersion.Platform.ToString() };
         }
     }
 }

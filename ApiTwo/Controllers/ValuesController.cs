@@ -13,7 +13,7 @@ namespace ApiTwo.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "apitwo", "value1", "value2" };
+            return new string[] { "apitwo", "value1", "value2", Environment.CommandLine, Environment.CurrentManagedThreadId.ToString(), Environment.MachineName, Environment.OSVersion.Platform.ToString() };
         }
     }
 }

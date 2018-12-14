@@ -24,6 +24,12 @@ namespace ApiTwo.Extensions
         /// <returns></returns>
         public static IServiceCollection AddConsul(this IServiceCollection services, IConfiguration configuration)
         {
+            string ip = configuration["consulip"];
+            string port = configuration["consulport"];
+
+            Console.WriteLine("####consulip : " + ip);
+            Console.WriteLine("####consulport:" + port);
+
             // 配置Consul服务注册地址
             services.Configure<ServiceDiscoveryOptions>(configuration.GetSection("ServiceDiscovery"));
             // 配置Consul客户端
@@ -33,6 +39,11 @@ namespace ApiTwo.Extensions
                 if (!string.IsNullOrWhiteSpace(consulOptions.Consul.HttpEndPoint))
                 {
                     config.Address = new Uri(consulOptions.Consul.HttpEndPoint);
+                }
+
+                if (!string.IsNullOrWhiteSpace(ip) && !string.IsNullOrWhiteSpace(port))
+                {
+                    config.Address = new Uri($"http://{ip}:{port}");
                 }
             }));
 
@@ -44,7 +55,7 @@ namespace ApiTwo.Extensions
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, string servername = "")
         {
             IConsulClient consul = app.ApplicationServices.GetRequiredService<IConsulClient>();
             IApplicationLifetime appLife = app.ApplicationServices.GetRequiredService<IApplicationLifetime>();
@@ -57,7 +68,10 @@ namespace ApiTwo.Extensions
             // 向Consul客户端注册RestApi服务
             foreach (var address in addresses)
             {
-                var serviceId = $"{serviceOptions.Value.ServiceName}_{address.Host}:{address.Port}";
+                Console.WriteLine("####server name : " + ((!string.IsNullOrWhiteSpace(servername)) ? servername : serviceOptions.Value.ServiceName));
+                Console.WriteLine("####address:" + address.Host + ":" + address.Port);
+
+                var serviceId = $"{((!string.IsNullOrWhiteSpace(servername)) ? servername : serviceOptions.Value.ServiceName)}_{address.Host}:{address.Port}";
 
                 var httpCheck = new AgentServiceCheck()
                 {
@@ -71,7 +85,7 @@ namespace ApiTwo.Extensions
                     Checks = new[] { httpCheck },
                     Address = address.Host,
                     ID = serviceId,
-                    Name = serviceOptions.Value.ServiceName,
+                    Name = ((!string.IsNullOrWhiteSpace(servername)) ? servername : serviceOptions.Value.ServiceName),
                     Port = address.Port
                 };
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ids4CenterApp.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ namespace Ids4CenterApp
                .AddInMemoryClients(Config.GetClients())//基于配置对象的内存中集合的注册IClientStore和ICorsPolicyService实现Client
                .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
                .AddProfileService<ProfileService>();
+            services.AddConsul(Configuration);
             services.AddMvc();
         }
 
@@ -39,6 +41,7 @@ namespace Ids4CenterApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseIdentityServer();//注入HTTP管道中
+            app.UseConsul(Configuration["servername"]);
             app.UseMvc();
         }
     }

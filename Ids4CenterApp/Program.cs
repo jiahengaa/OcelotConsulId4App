@@ -14,15 +14,32 @@ namespace Ids4CenterApp
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            BuildWebHost(args).Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext,builder)=>{
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+                .AddCommandLine(args)
+                .Build();
+
+            string ip = config["ids4ip"];
+            string port = config["ids4port"];
+
+            var host = WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, builder) =>
+                {
                     builder.AddJsonFile("appsettings.json");
                     builder.AddJsonFile("Properties/launchSettings.json");
                 })
                 .UseStartup<Startup>();
+
+            if (!string.IsNullOrWhiteSpace(ip) && !string.IsNullOrWhiteSpace(port))
+            {
+                host.UseUrls($"http://{ip}:{port}");
+            }
+
+            return host.Build();
+        }
     }
 }

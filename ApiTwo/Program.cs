@@ -23,8 +23,8 @@ namespace ApiTwo
                 .AddCommandLine(args)
                 .Build();
 
-            string ip = config["ip"];
-            string port = config["port"];
+            string ip = config["apitwoip"];
+            string port = config["apitwoport"];
 
             var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
@@ -36,6 +36,6 @@ namespace ApiTwo
 
             return host.Build();
         }
-            
+
     }
 }

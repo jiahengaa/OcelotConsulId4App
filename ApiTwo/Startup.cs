@@ -37,7 +37,7 @@ namespace ApiTwo
             }
 
             app.UseMvc();
-            app.UseConsul();
+            app.UseConsul(Configuration["servername"]);
         }
     }
 }

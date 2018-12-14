@@ -23,9 +23,10 @@ namespace ApiOne
                 .AddCommandLine(args)
                 .Build();
 
-            string ip = config["ip"];
-            string port = config["port"];
+            string ip = config["apioneip"];
+            string port = config["apioneport"];
             var host = WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
                 .UseStartup<Startup>();
 
             if (!string.IsNullOrWhiteSpace(ip) && !string.IsNullOrWhiteSpace(port))
@@ -35,6 +36,6 @@ namespace ApiOne
 
             return host;
         }
-            
+
     }
 }

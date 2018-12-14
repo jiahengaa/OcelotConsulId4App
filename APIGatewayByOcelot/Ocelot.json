@@ -4,18 +4,18 @@
     {
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts":[
+      "DownstreamHostAndPorts": [
         {
-          "Host":"localhost",
-          "Port":8000
+          "Host": "localhost",
+          "Port": 5000
         },
         {
-          "Host":"localhost",
-          "Port":8001
+          "Host": "localhost",
+          "Port": 5001
         },
         {
-          "Host":"localhost",
-          "Port":8002
+          "Host": "localhost",
+          "Port": 5002
         }
       ],
       "UpstreamPathTemplate": "/one/{url}",
@@ -28,9 +28,9 @@
         "AllowedScopes": []
       },
       "ServiceName": "ApiOne",
-
-      "LoadBalancer": "RoundRobin",
-
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -38,7 +38,6 @@
         "Limit": 3,
         "PeriodTimespan": 5
       },
-
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 5,
@@ -50,18 +49,18 @@
     {
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts":[
+      "DownstreamHostAndPorts": [
         {
-          "Host":"localhost",
-          "Port":8003
+          "Host": "localhost",
+          "Port": 5003
         },
         {
-          "Host":"localhost",
-          "Port":8004
+          "Host": "localhost",
+          "Port": 5004
         },
         {
-          "Host":"localhost",
-          "Port":8005
+          "Host": "localhost",
+          "Port": 5005
         }
       ],
       "UpstreamPathTemplate": "/two/{url}",
@@ -74,7 +73,10 @@
         "AllowedScopes": []
       },
       "ServiceName": "ApiTwo",
-      "LoadBalancer": "RoundRobin ",
+      // "LoadBalancer": "RoundRobin",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -96,18 +98,20 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "172.18.0.60",
           "Port": "12345"
         }
       ],
       "ServiceName": "IdentityServiceCenter",
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
-      },
       "UpstreamPathTemplate": "/api/identityservice/{url}",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post"
+      ],
       "RateLimitOptions": {
-        "ClientWhitelist": [ "admin" ], // 白名单
+        "ClientWhitelist": [
+          "admin"
+        ], // 白名单
         "EnableRateLimiting": true, // 是否启用限流
         "Period": "1m", // 统计时间段：1s, 5m, 1h, 1d
         "PeriodTimespan": 15, // 多少秒之后客户端可以重试
@@ -126,8 +130,9 @@
   ],
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "127.0.0.1",
-      "Port": 8500
+      "Host": "172.18.0.2",
+      "Port": 8500,
+      "Type": "consul"
     },
     "RateLimitOptions": {
       "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用

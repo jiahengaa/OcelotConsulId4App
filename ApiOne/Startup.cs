@@ -44,7 +44,7 @@ namespace ApiOne
 
             //app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseConsul();
+            app.UseConsul(Configuration["servername"]);
         }
     }
 }

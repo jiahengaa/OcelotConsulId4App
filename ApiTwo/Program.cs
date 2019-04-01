@@ -27,6 +27,7 @@ namespace ApiTwo
             string port = config["apitwoport"];
 
             var host = WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
                 .UseStartup<Startup>();
 
             if (!string.IsNullOrWhiteSpace(ip) && !string.IsNullOrWhiteSpace(port))

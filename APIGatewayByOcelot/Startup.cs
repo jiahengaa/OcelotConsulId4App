@@ -40,7 +40,7 @@ namespace APIGatewayByOcelot
 
             Action<IdentityServerAuthenticationOptions> apiOneServerOption = option =>
             {
-                option.Authority = "http://172.18.0.60:12345";
+                option.Authority = "http://localhost:12345";
                 option.ApiName = "api-one";
                 option.RequireHttpsMetadata = false;
                 option.SupportedTokens = SupportedTokens.Both;
@@ -49,7 +49,7 @@ namespace APIGatewayByOcelot
 
             Action<IdentityServerAuthenticationOptions> apiTwoServerOption = option =>
             {
-                option.Authority = "http://172.18.0.60:12345";
+                option.Authority = "http://localhost:12345";
                 option.ApiName = "api-two";
                 option.RequireHttpsMetadata = false;
                 option.SupportedTokens = SupportedTokens.Both;

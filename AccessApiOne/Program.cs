@@ -26,8 +26,8 @@ namespace AccessApiOne
 
             // 客户端模式
             // 使用IdentityServer服务端配置的客户端Id和Secret，通过TokenEndpoint地址向IdentityServer服务端获取访问one-api资源需要的AccessToken
-            TokenClient tokenClient = new TokenClient(discoveryResponse.TokenEndpoint, "api-one-client", "api-one-secret");
-            TokenResponse tokenResponse = await tokenClient.RequestClientCredentialsAsync("api-one");
+            TokenClient tokenClient = new TokenClient(discoveryResponse.TokenEndpoint, "api-two-client", "api-two-secret");
+            TokenResponse tokenResponse = await tokenClient.RequestClientCredentialsAsync("api-two");
             if (tokenResponse.IsError)
             {
                 Console.WriteLine($"获取AccessToken出错：{tokenResponse.Error}");
@@ -39,7 +39,7 @@ namespace AccessApiOne
             HttpClient httpClient = new HttpClient();
             // 使用获取到的AccessToken访问user-api资源
             httpClient.SetBearerToken(tokenResponse.AccessToken);
-            var httpResonse = await httpClient.GetAsync("http://localhost:5000/one/values");
+            var httpResonse = await httpClient.GetAsync("http://localhost:5033/two/values");
             if (httpResonse.IsSuccessStatusCode)
             {
                 var content = await httpResonse.Content.ReadAsStringAsync();
